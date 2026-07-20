@@ -4,8 +4,8 @@
   "description": "Organiza todos los ámbitos de tu vida diaria y vence la procrastinación.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#0f766e",
+  "background_color": "#f2f1eb",
+  "theme_color": "#1a1d24",
   "lang": "es",
   "icons": [
     { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },

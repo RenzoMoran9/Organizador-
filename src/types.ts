@@ -1,16 +1,20 @@
 export type AreaColor =
-  | 'teal'
-  | 'blue'
-  | 'violet'
-  | 'rose'
-  | 'emerald'
-  | 'amber'
-  | 'sky'
-  | 'orange'
+  | 'cobalt'
+  | 'oxide'
+  | 'moss'
+  | 'ochre'
+  | 'plum'
+  | 'petrol'
+  | 'sepia'
+  | 'slate'
+
+/** Símbolo cartográfico del área, como en la leyenda de un mapa */
+export type AreaShape = 'square' | 'circle' | 'diamond' | 'triangle' | 'hex' | 'ring'
 
 export interface Area {
   id: string
   name: string
+  /** Símbolo de leyenda (AreaShape). Datos antiguos pueden traer un emoji: se migra. */
   icon: string
   color: AreaColor
 }

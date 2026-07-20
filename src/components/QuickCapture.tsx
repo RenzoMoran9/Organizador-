@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useStore } from '../store'
-import { IconSparkles } from '../icons'
+import { IconCheck } from '../icons'
 import { Btn, Modal } from './ui'
 
 export function QuickCapture({ onClose }: { onClose: () => void }) {
@@ -19,7 +19,7 @@ export function QuickCapture({ onClose }: { onClose: () => void }) {
   return (
     <Modal title="Captura rápida" onClose={onClose}>
       <div className="space-y-4">
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-ink2">
           Saca de tu cabeza lo que sea — un pendiente, una idea, un encargo. Luego lo
           organizas desde la <strong>Bandeja</strong>.
         </p>
@@ -34,14 +34,14 @@ export function QuickCapture({ onClose }: { onClose: () => void }) {
             }
           }}
           placeholder="Escribe y presiona Enter…"
-          className="min-h-24 w-full resize-y rounded-xl border-0 bg-slate-100 px-3.5 py-2.5 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:bg-slate-800"
+          className="min-h-24 w-full resize-y rounded-sm border border-line bg-paper px-3.5 py-2.5 text-sm placeholder:text-ink3 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
         />
         {savedCount > 0 && (
-          <p className="flex items-center gap-1.5 text-xs font-medium text-teal-600 dark:text-teal-400">
-            <IconSparkles className="w-4 h-4" />
+          <p className="flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-accent">
+            <IconCheck className="w-3.5 h-3.5" />
             {savedCount === 1
-              ? 'Guardado en tu bandeja. Puedes seguir capturando.'
-              : `${savedCount} capturas guardadas en tu bandeja.`}
+              ? 'Guardado en tu bandeja'
+              : `${savedCount} capturas en tu bandeja`}
           </p>
         )}
         <div className="flex justify-end gap-2">

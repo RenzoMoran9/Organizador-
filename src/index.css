@@ -2,8 +2,89 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ————— Identidad: bitácora de navegación —————
+   Tinta sobre papel, cobalto como único acento,
+   serif editorial para display, mono para datos. */
+
+:root {
+  --paper: #f2f1eb;
+  --surface: #fbfaf6;
+  --surface-2: #eae9e1;
+  --ink: #1a1d24;
+  --ink-2: #50545e;
+  --ink-3: #989ba3;
+  --line: rgba(26, 29, 36, 0.16);
+  --accent: #2f45c8;
+  --accent-2: #24379f;
+  --on-accent: #f5f6ff;
+  --panel: #1a1d24;
+  --panel-ink: #edebe3;
+  --panel-muted: #85899a;
+  --oxide: #b34434;
+  --moss: #567741;
+  --ochre: #a2781c;
+
+  --area-cobalt: #3d55d8;
+  --area-oxide: #b34434;
+  --area-moss: #567741;
+  --area-ochre: #a2781c;
+  --area-plum: #7a4e9e;
+  --area-petrol: #2e6e75;
+  --area-sepia: #8a5f41;
+  --area-slate: #5b6472;
+}
+
+.dark {
+  --paper: #101319;
+  --surface: #171b23;
+  --surface-2: #202634;
+  --ink: #e9e7df;
+  --ink-2: #a9acb4;
+  --ink-3: #6b7078;
+  --line: rgba(233, 231, 223, 0.15);
+  --accent: #8494ff;
+  --accent-2: #9dabff;
+  --on-accent: #0f1320;
+  --panel: #0b0e14;
+  --panel-ink: #e9e7df;
+  --panel-muted: #767b86;
+  --oxide: #de6a57;
+  --moss: #8fae77;
+  --ochre: #d0a84e;
+
+  --area-cobalt: #8494ff;
+  --area-oxide: #de6a57;
+  --area-moss: #8fae77;
+  --area-ochre: #d0a84e;
+  --area-plum: #b08ad6;
+  --area-petrol: #5fa3ab;
+  --area-sepia: #c29472;
+  --area-slate: #98a1b0;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink2: var(--ink-2);
+  --color-ink3: var(--ink-3);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent2: var(--accent-2);
+  --color-onaccent: var(--on-accent);
+  --color-panel: var(--panel);
+  --color-panelink: var(--panel-ink);
+  --color-panelmuted: var(--panel-muted);
+  --color-oxide: var(--oxide);
+  --color-moss: var(--moss);
+  --color-ochre: var(--ochre);
+}
+
 @theme {
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
 }
 
 html {
@@ -12,7 +93,22 @@ html {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+h1 {
+  text-wrap: balance;
+}
+
+/* Etiqueta de sección: mono, versalitas, con guion cartográfico */
+.caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
 @keyframes slide-up {
@@ -30,8 +126,20 @@ body {
   animation: slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Barras de desplazamiento discretas */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-up {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(148 163 184 / 0.35) transparent;
+  scrollbar-color: var(--line) transparent;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
 }

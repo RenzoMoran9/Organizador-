@@ -3,7 +3,7 @@ import { addDays, format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useStore } from '../store'
 import type { Task } from '../types'
-import { AREA_COLORS, dateStr, todayStr, weekDays } from '../utils'
+import { areaVar, dateStr, todayStr, weekDays } from '../utils'
 import {
   IconArrowRight,
   IconChart,
@@ -14,6 +14,7 @@ import {
   IconX,
 } from '../icons'
 import { Btn, Card, CardHeader, EmptyState } from '../components/ui'
+import { AreaMark } from '../components/AreaMark'
 
 export function Review() {
   const { tasks, habits, focusSessions, areas, updateTask, deleteTask, lastReviewDate, markReviewDone } =
@@ -71,12 +72,18 @@ export function Review() {
     setTimeout(() => setCelebrando(false), 2500)
   }
 
+  const pillCls =
+    'inline-flex items-center gap-1 rounded-sm border px-2.5 py-1 text-[11px] font-medium transition-colors'
+
   return (
     <div className="space-y-5">
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight">Revisión semanal</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          {format(week[0], "d MMM", { locale: es })} —{' '}
+      <header className="border-b border-line pb-5">
+        <p className="caption !text-accent">Diez minutos que ordenan la semana</p>
+        <h1 className="mt-2 font-display text-[28px] font-semibold tracking-tight">
+          Revisión semanal
+        </h1>
+        <p className="mt-1.5 font-mono text-[11px] text-ink3">
+          {format(week[0], 'd MMM', { locale: es })} —{' '}
           {format(week[6], "d 'de' MMMM", { locale: es })}
         </p>
       </header>
@@ -101,9 +108,11 @@ export function Review() {
           },
         ].map((m) => (
           <Card key={m.label} className="p-4">
-            <span className="text-teal-600 dark:text-teal-400">{m.icon}</span>
-            <p className="mt-2 text-2xl font-bold tabular-nums tracking-tight">{m.value}</p>
-            <p className="text-[11px] leading-4 text-slate-400 dark:text-slate-500">{m.label}</p>
+            <span className="text-accent">{m.icon}</span>
+            <p className="mt-2 font-mono text-[26px] font-semibold tabular-nums leading-8">
+              {m.value}
+            </p>
+            <p className="text-[11px] leading-4 text-ink3">{m.label}</p>
           </Card>
         ))}
       </div>
@@ -111,20 +120,20 @@ export function Review() {
       {/* Paso 1: celebrar */}
       <Card>
         <CardHeader
-          title="1 · Celebra lo que lograste"
+          title="01 · Celebra lo que lograste"
           subtitle="Reconocer el avance motiva más que castigarse por lo pendiente."
         />
         {stats.completedThisWeek.length === 0 ? (
           <EmptyState
-            icon={<IconSparkles className="w-10 h-10" />}
+            icon={<IconSparkles className="w-9 h-9" />}
             title="Aún no completas tareas esta semana"
             hint="Cada tarea que completes aparecerá aquí como un logro."
           />
         ) : (
           <ul className="space-y-1 px-5 pb-4 pt-1">
             {stats.completedThisWeek.map((t) => (
-              <li key={t.id} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                <IconCheck className="w-4 h-4 shrink-0 text-teal-500" />
+              <li key={t.id} className="flex items-center gap-2 text-sm text-ink2">
+                <IconCheck className="w-4 h-4 shrink-0 text-moss" />
                 <span className="truncate">{t.title}</span>
               </li>
             ))}
@@ -142,16 +151,20 @@ export function Review() {
           <div className="space-y-2.5 px-5 pb-5 pt-1">
             {stats.byArea.map(({ area, count }) => (
               <div key={area.id} className="flex items-center gap-3">
-                <span className="w-24 shrink-0 truncate text-xs font-medium text-slate-500 dark:text-slate-400">
-                  {area.icon} {area.name}
+                <span className="flex w-26 shrink-0 items-center gap-1.5 truncate text-xs font-medium text-ink2">
+                  <AreaMark area={area} size={9} />
+                  {area.name}
                 </span>
-                <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface2">
                   <div
-                    className={`h-full rounded-full ${AREA_COLORS[area.color].bar} transition-all duration-700`}
-                    style={{ width: `${(count / stats.maxArea) * 100}%` }}
+                    className="h-full transition-all duration-700"
+                    style={{
+                      width: `${(count / stats.maxArea) * 100}%`,
+                      background: areaVar(area.color),
+                    }}
                   />
                 </div>
-                <span className="w-6 text-right text-xs font-semibold tabular-nums text-slate-400">
+                <span className="w-6 text-right font-mono text-xs font-semibold tabular-nums text-ink3">
                   {count}
                 </span>
               </div>
@@ -163,41 +176,38 @@ export function Review() {
       {/* Paso 2: decidir sobre pendientes */}
       <Card>
         <CardHeader
-          title="2 · Decide sobre lo pendiente"
+          title="02 · Decide sobre lo pendiente"
           subtitle="Reprograma o suelta sin culpa. Lo que importa avanza; lo que no, estorba."
         />
         {pendientes.length === 0 ? (
-          <EmptyState
-            icon={<IconCheck className="w-10 h-10" />}
-            title="Nada vencido. ¡Vas al día!"
-          />
+          <EmptyState icon={<IconCheck className="w-9 h-9" />} title="Nada vencido. Vas al día." />
         ) : (
-          <ul className="divide-y divide-slate-100 pb-2 dark:divide-slate-800">
+          <ul className="divide-y divide-line pb-2">
             {pendientes.map((t: Task) => (
               <li key={t.id} className="px-5 py-3">
                 <p className="text-sm">{t.title}</p>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   <button
                     onClick={() => updateTask(t.id, { dueDate: nextMonday })}
-                    className="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2.5 py-1 text-[11px] font-medium text-teal-700 hover:bg-teal-100 dark:bg-teal-500/10 dark:text-teal-300 dark:hover:bg-teal-500/20 transition-colors"
+                    className={`${pillCls} border-accent/40 text-accent hover:bg-accent/8`}
                   >
                     <IconArrowRight className="w-3 h-3" /> Próxima semana
                   </button>
                   <button
                     onClick={() => updateTask(t.id, { dueDate: hoy })}
-                    className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-700 hover:bg-amber-100 dark:bg-amber-500/10 dark:text-amber-300 dark:hover:bg-amber-500/20 transition-colors"
+                    className={`${pillCls} border-ochre/40 text-ochre hover:bg-ochre/10`}
                   >
                     Hoy mismo
                   </button>
                   <button
                     onClick={() => updateTask(t.id, { dueDate: undefined })}
-                    className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
+                    className={`${pillCls} border-line text-ink3 hover:text-ink2`}
                   >
                     <IconX className="w-3 h-3" /> Quitar fecha
                   </button>
                   <button
                     onClick={() => deleteTask(t.id)}
-                    className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-medium text-rose-600 hover:bg-rose-100 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/20 transition-colors"
+                    className={`${pillCls} border-oxide/40 text-oxide hover:bg-oxide/10`}
                   >
                     <IconTrash className="w-3 h-3" /> Soltar
                   </button>
@@ -209,31 +219,28 @@ export function Review() {
       </Card>
 
       {/* Paso 3: cerrar */}
-      <Card className="p-5 text-center">
+      <Card className="p-6 text-center">
         {celebrando ? (
           <>
-            <p className="text-3xl">🎉</p>
-            <p className="mt-1 text-sm font-semibold">¡Revisión completada!</p>
-            <p className="text-xs text-slate-400 dark:text-slate-500">
-              Empiezas la semana con el mapa claro.
-            </p>
+            <p className="font-display italic text-xl">¡Revisión completada!</p>
+            <p className="mt-1 text-xs text-ink3">Empiezas la semana con el mapa claro.</p>
           </>
         ) : reviewedThisWeek ? (
           <>
-            <IconCheck className="mx-auto w-7 h-7 text-teal-500" />
-            <p className="mt-1 text-sm font-semibold">Revisión de esta semana hecha</p>
-            <p className="text-xs text-slate-400 dark:text-slate-500">
+            <IconCheck className="mx-auto w-6 h-6 text-moss" />
+            <p className="mt-1.5 font-display text-lg">Revisión de esta semana hecha</p>
+            <p className="text-xs text-ink3">
               Nos vemos la próxima semana. Mañana, elige tus 3 prioridades en "Hoy".
             </p>
           </>
         ) : (
           <>
-            <p className="text-sm font-semibold">3 · Cierra tu revisión</p>
-            <p className="mx-auto mt-1 max-w-sm text-xs text-slate-400 dark:text-slate-500">
-              ¿Listo? Mañana al abrir la app elige tus 3 prioridades del día en la
-              pestaña "Hoy". Diez minutos de revisión te ahorran una semana de caos.
+            <p className="caption">03 · Cierra tu revisión</p>
+            <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-ink3">
+              ¿Listo? Mañana al abrir la app elige tus 3 prioridades del día en la pestaña
+              "Hoy". Diez minutos de revisión te ahorran una semana de caos.
             </p>
-            <Btn onClick={finish} className="mt-3">
+            <Btn onClick={finish} className="mt-3.5">
               <IconSparkles className="w-4 h-4" /> Terminar revisión
             </Btn>
           </>

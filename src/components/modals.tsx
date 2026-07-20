@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useStore } from '../store'
 import type { CalendarEvent, Habit, Priority, Subtask, Task } from '../types'
-import { AREA_COLORS, PRIORITY_META, uid, WEEKDAYS } from '../utils'
+import { areaVar, PRIORITY_META, tint, uid, WEEKDAYS } from '../utils'
 import { IconPlus, IconTrash, IconX } from '../icons'
-import { Btn, Field, inputCls, Modal } from './ui'
+import { AreaMark } from './AreaMark'
+import { Btn, Field, inputCls, Modal, segCls } from './ui'
 
 export function AreaPicker({
   value,
@@ -18,11 +19,7 @@ export function AreaPicker({
       <button
         type="button"
         onClick={() => onChange(undefined)}
-        className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-          !value
-            ? 'bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900'
-            : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
-        }`}
+        className={segCls(!value)}
       >
         Sin área
       </button>
@@ -31,13 +28,19 @@ export function AreaPicker({
           key={a.id}
           type="button"
           onClick={() => onChange(a.id)}
-          className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+          className="inline-flex items-center gap-1.5 rounded-sm border px-3 py-2 text-xs font-medium transition-colors"
+          style={
             value === a.id
-              ? AREA_COLORS[a.color].chip + ' ring-2 ring-current'
-              : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
-          }`}
+              ? {
+                  borderColor: areaVar(a.color),
+                  color: areaVar(a.color),
+                  background: tint(areaVar(a.color), 10),
+                }
+              : { borderColor: 'var(--line)', color: 'var(--ink-2)' }
+          }
         >
-          {a.icon} {a.name}
+          <AreaMark area={a} size={10} />
+          {a.name}
         </button>
       ))}
     </div>
@@ -61,10 +64,10 @@ export function WeekdayPicker({
           type="button"
           onClick={() => toggle(w.day)}
           title={w.full}
-          className={`h-9 w-9 rounded-full text-xs font-semibold transition-colors ${
+          className={`h-9 w-9 rounded-sm border font-mono text-xs font-semibold transition-colors ${
             value.includes(w.day)
-              ? 'bg-teal-600 text-white'
-              : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
+              ? 'border-accent bg-accent text-onaccent'
+              : 'border-line text-ink2 hover:border-ink3'
           }`}
         >
           {w.label}
@@ -131,7 +134,7 @@ export function TaskModal({
           save()
         }}
       >
-        <Field label="¿Qué hay que hacer?">
+        <Field label="Qué hay que hacer">
           <input
             autoFocus
             className={inputCls}
@@ -152,11 +155,16 @@ export function TaskModal({
                 key={p}
                 type="button"
                 onClick={() => setPriority(p)}
-                className={`rounded-xl px-3 py-2 text-xs font-medium transition-all ${
+                className="rounded-sm border px-3 py-2 text-xs font-medium transition-colors"
+                style={
                   priority === p
-                    ? PRIORITY_META[p].chip + ' ring-2 ring-current'
-                    : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
-                }`}
+                    ? {
+                        borderColor: PRIORITY_META[p].color,
+                        color: PRIORITY_META[p].color,
+                        background: tint(PRIORITY_META[p].color, 10),
+                      }
+                    : { borderColor: 'var(--line)', color: 'var(--ink-2)' }
+                }
               >
                 {PRIORITY_META[p].label}
               </button>
@@ -168,33 +176,33 @@ export function TaskModal({
           <Field label="Fecha">
             <input
               type="date"
-              className={inputCls}
+              className={inputCls + ' font-mono text-xs'}
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
             />
           </Field>
-          <Field label="Hora (reservar bloque)">
+          <Field label="Hora — reservar bloque">
             <input
               type="time"
-              className={inputCls}
+              className={inputCls + ' font-mono text-xs'}
               value={scheduledTime}
               onChange={(e) => setScheduledTime(e.target.value)}
             />
           </Field>
         </div>
 
-        <Field label="Pasos pequeños (subtareas)">
+        <Field label="Pasos pequeños">
           <div className="space-y-1.5">
             {subtasks.map((st) => (
               <div
                 key={st.id}
-                className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 px-3 py-2"
+                className="flex items-center gap-2 rounded-sm border border-line bg-paper px-3 py-2"
               >
                 <span className="flex-1 text-sm">{st.title}</span>
                 <button
                   type="button"
                   onClick={() => setSubtasks((s) => s.filter((x) => x.id !== st.id))}
-                  className="text-slate-400 hover:text-rose-500 transition-colors"
+                  className="text-ink3 hover:text-oxide transition-colors"
                   aria-label={`Quitar ${st.title}`}
                 >
                   <IconX className="w-4 h-4" />
@@ -276,8 +284,7 @@ export function EventModal({
   const [endTime, setEndTime] = useState(initial?.endTime ?? '')
   const [notes, setNotes] = useState(initial?.notes ?? '')
 
-  const valid =
-    title.trim() && startTime && (recurring ? days.length > 0 : !!date)
+  const valid = title.trim() && startTime && (recurring ? days.length > 0 : !!date)
 
   const save = () => {
     if (!valid) return
@@ -319,27 +326,11 @@ export function EventModal({
           <AreaPicker value={areaId} onChange={setAreaId} />
         </Field>
 
-        <div className="flex gap-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 p-1">
-          <button
-            type="button"
-            onClick={() => setRecurring(false)}
-            className={`flex-1 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-              !recurring
-                ? 'bg-white dark:bg-slate-700 shadow-sm'
-                : 'text-slate-500 dark:text-slate-400'
-            }`}
-          >
+        <div className="grid grid-cols-2 gap-1.5">
+          <button type="button" onClick={() => setRecurring(false)} className={segCls(!recurring)}>
             Fecha única
           </button>
-          <button
-            type="button"
-            onClick={() => setRecurring(true)}
-            className={`flex-1 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-              recurring
-                ? 'bg-white dark:bg-slate-700 shadow-sm'
-                : 'text-slate-500 dark:text-slate-400'
-            }`}
-          >
+          <button type="button" onClick={() => setRecurring(true)} className={segCls(recurring)}>
             Rutina semanal
           </button>
         </div>
@@ -352,7 +343,7 @@ export function EventModal({
           <Field label="Fecha">
             <input
               type="date"
-              className={inputCls}
+              className={inputCls + ' font-mono text-xs'}
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
@@ -363,15 +354,15 @@ export function EventModal({
           <Field label="Empieza">
             <input
               type="time"
-              className={inputCls}
+              className={inputCls + ' font-mono text-xs'}
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
             />
           </Field>
-          <Field label="Termina (opcional)">
+          <Field label="Termina — opcional">
             <input
               type="time"
-              className={inputCls}
+              className={inputCls + ' font-mono text-xs'}
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
             />
@@ -454,17 +445,17 @@ export function HabitModal({
           />
         </Field>
 
-        <Field label="Ícono">
+        <Field label="Símbolo">
           <div className="flex flex-wrap gap-1.5">
             {HABIT_ICONS.map((i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => setIcon(i)}
-                className={`h-10 w-10 rounded-xl text-lg transition-all ${
+                className={`h-10 w-10 rounded-sm border text-lg transition-colors ${
                   icon === i
-                    ? 'bg-teal-100 dark:bg-teal-500/20 ring-2 ring-teal-500'
-                    : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    ? 'border-accent bg-accent/8'
+                    : 'border-line hover:border-ink3'
                 }`}
               >
                 {i}

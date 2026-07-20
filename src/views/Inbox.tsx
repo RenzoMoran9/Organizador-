@@ -25,13 +25,19 @@ export function Inbox() {
     }, 600)
   }
 
+  const actionCls =
+    'inline-flex items-center gap-1.5 rounded-sm border border-line px-3 py-1.5 text-xs font-medium text-ink2 transition-colors hover:border-accent hover:text-accent'
+
   return (
     <div className="space-y-5">
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight">Bandeja de entrada</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Todo lo que capturas cae aquí. Procesa cada cosa: conviértela en tarea o evento —
-          y si toma <strong>menos de 2 minutos, hazla ya</strong>.
+      <header className="border-b border-line pb-5">
+        <p className="caption !text-accent">Capturar · Procesar</p>
+        <h1 className="mt-2 font-display text-[28px] font-semibold tracking-tight">
+          Bandeja de entrada
+        </h1>
+        <p className="mt-1.5 text-sm text-ink2">
+          Todo lo que capturas cae aquí. Conviértelo en tarea o evento — y si toma{' '}
+          <strong>menos de 2 minutos, hazlo ya</strong>.
         </p>
       </header>
 
@@ -53,12 +59,12 @@ export function Inbox() {
       <Card>
         {inbox.length === 0 ? (
           <EmptyState
-            icon={<IconInbox className="w-10 h-10" />}
-            title="Bandeja vacía. Mente despejada. ✨"
+            icon={<IconInbox className="w-9 h-9" />}
+            title="Bandeja vacía. Mente despejada."
             hint="Cuando algo aparezca en tu cabeza —un pendiente, una idea— captúralo aquí en segundos y sigue con lo tuyo."
           />
         ) : (
-          <ul className="divide-y divide-slate-100 dark:divide-slate-800">
+          <ul className="divide-y divide-line">
             {inbox.map((item) => (
               <li
                 key={item.id}
@@ -66,30 +72,30 @@ export function Inbox() {
                   doneFlash === item.id ? 'opacity-0' : ''
                 }`}
               >
-                <p className="text-sm text-slate-800 dark:text-slate-100">{item.text}</p>
+                <p className="text-sm text-ink">{item.text}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-1.5">
                   <button
                     onClick={() => setConverting({ id: item.id, text: item.text, to: 'tarea' })}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-3 py-1.5 text-xs font-medium text-teal-700 transition-colors hover:bg-teal-100 dark:bg-teal-500/10 dark:text-teal-300 dark:hover:bg-teal-500/20"
+                    className={actionCls}
                   >
                     <IconTasks className="w-3.5 h-3.5" /> Convertir en tarea
                   </button>
                   <button
                     onClick={() => setConverting({ id: item.id, text: item.text, to: 'evento' })}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1.5 text-xs font-medium text-sky-700 transition-colors hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-300 dark:hover:bg-sky-500/20"
+                    className={actionCls}
                   >
                     <IconCalendar className="w-3.5 h-3.5" /> Convertir en evento
                   </button>
                   <button
                     onClick={() => quickDone(item.id)}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20"
+                    className="inline-flex items-center gap-1.5 rounded-sm border border-moss/40 px-3 py-1.5 text-xs font-medium text-moss transition-colors hover:bg-moss/10"
                   >
                     <IconCheck className="w-3.5 h-3.5" /> Hecho en 2 min
                   </button>
                   <button
                     onClick={() => deleteInbox(item.id)}
                     aria-label="Descartar"
-                    className="ml-auto rounded-full p-1.5 text-slate-300 transition-colors hover:bg-rose-50 hover:text-rose-500 dark:text-slate-600 dark:hover:bg-rose-500/10"
+                    className="ml-auto rounded-sm p-1.5 text-ink3 transition-colors hover:bg-oxide/10 hover:text-oxide"
                   >
                     <IconTrash className="w-4 h-4" />
                   </button>

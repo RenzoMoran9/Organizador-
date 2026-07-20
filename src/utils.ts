@@ -81,78 +81,29 @@ export function habitRate30(habit: Habit): number {
   return applicable === 0 ? 0 : Math.round((completed / applicable) * 100)
 }
 
-export interface AreaColorClasses {
-  dot: string
-  chip: string
-  bar: string
-  soft: string
-}
+/** Color del área como variable CSS: cambia solo entre tema claro y oscuro. */
+export const areaVar = (color: AreaColor) => `var(--area-${color})`
 
-export const AREA_COLORS: Record<AreaColor, AreaColorClasses> = {
-  teal: {
-    dot: 'bg-teal-500',
-    chip: 'bg-teal-100 text-teal-800 dark:bg-teal-500/15 dark:text-teal-300',
-    bar: 'bg-teal-500',
-    soft: 'border-teal-500/40',
-  },
-  blue: {
-    dot: 'bg-blue-500',
-    chip: 'bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300',
-    bar: 'bg-blue-500',
-    soft: 'border-blue-500/40',
-  },
-  violet: {
-    dot: 'bg-violet-500',
-    chip: 'bg-violet-100 text-violet-800 dark:bg-violet-500/15 dark:text-violet-300',
-    bar: 'bg-violet-500',
-    soft: 'border-violet-500/40',
-  },
-  rose: {
-    dot: 'bg-rose-500',
-    chip: 'bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-300',
-    bar: 'bg-rose-500',
-    soft: 'border-rose-500/40',
-  },
-  emerald: {
-    dot: 'bg-emerald-500',
-    chip: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300',
-    bar: 'bg-emerald-500',
-    soft: 'border-emerald-500/40',
-  },
-  amber: {
-    dot: 'bg-amber-500',
-    chip: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300',
-    bar: 'bg-amber-500',
-    soft: 'border-amber-500/40',
-  },
-  sky: {
-    dot: 'bg-sky-500',
-    chip: 'bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300',
-    bar: 'bg-sky-500',
-    soft: 'border-sky-500/40',
-  },
-  orange: {
-    dot: 'bg-orange-500',
-    chip: 'bg-orange-100 text-orange-800 dark:bg-orange-500/15 dark:text-orange-300',
-    bar: 'bg-orange-500',
-    soft: 'border-orange-500/40',
-  },
-}
+export const AREA_COLOR_NAMES: AreaColor[] = [
+  'cobalt',
+  'oxide',
+  'moss',
+  'ochre',
+  'plum',
+  'petrol',
+  'sepia',
+  'slate',
+]
+
+/** Tinte suave de un color para fondos de fichas y chips. */
+export const tint = (cssColor: string, pct = 12) =>
+  `color-mix(in srgb, ${cssColor} ${pct}%, transparent)`
 
 export const PRIORITY_META: Record<
   'alta' | 'media' | 'baja',
-  { label: string; chip: string }
+  { label: string; color: string }
 > = {
-  alta: {
-    label: 'Alta',
-    chip: 'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300',
-  },
-  media: {
-    label: 'Media',
-    chip: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300',
-  },
-  baja: {
-    label: 'Baja',
-    chip: 'bg-slate-200 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300',
-  },
+  alta: { label: 'Alta', color: 'var(--oxide)' },
+  media: { label: 'Media', color: 'var(--ochre)' },
+  baja: { label: 'Baja', color: 'var(--ink-3)' },
 }

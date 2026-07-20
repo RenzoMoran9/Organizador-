@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react'
 import { useStore } from '../store'
 import type { Task } from '../types'
-import { AREA_COLORS, todayStr } from '../utils'
+import { areaVar, tint, todayStr } from '../utils'
 import { IconPlus, IconTasks } from '../icons'
-import { Btn, Card, CardHeader, EmptyState } from '../components/ui'
+import { Btn, Card, CardHeader, EmptyState, segCls } from '../components/ui'
+import { AreaMark } from '../components/AreaMark'
 import { TaskRow } from '../components/TaskRow'
 import { TaskModal } from '../components/modals'
 
@@ -35,8 +36,7 @@ export function Tasks() {
         },
       ].filter((g) => g.items.length > 0)
     }
-    const byDue = (a: Task, b: Task) =>
-      (a.dueDate ?? '9999') < (b.dueDate ?? '9999') ? -1 : 1
+    const byDue = (a: Task, b: Task) => ((a.dueDate ?? '9999') < (b.dueDate ?? '9999') ? -1 : 1)
     return [
       { label: 'Vencidas', items: filtered.filter((t) => t.dueDate && t.dueDate < hoy).sort(byDue) },
       { label: 'Para hoy', items: filtered.filter((t) => t.dueDate === hoy) },
@@ -50,10 +50,11 @@ export function Tasks() {
 
   return (
     <div className="space-y-5">
-      <header className="flex items-start justify-between gap-3">
+      <header className="flex items-end justify-between gap-3 border-b border-line pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Tareas</h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <p className="caption !text-accent">Organizar · Ejecutar</p>
+          <h1 className="mt-2 font-display text-[28px] font-semibold tracking-tight">Tareas</h1>
+          <p className="mt-1.5 font-mono text-[11px] text-ink3 tabular-nums">
             {pendingCount} pendientes · {doneCount} completadas
           </p>
         </div>
@@ -63,33 +64,32 @@ export function Tasks() {
       </header>
 
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-800">
+        <div className="flex gap-1.5">
           {(['pendientes', 'completadas'] as Tab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`rounded-lg px-3.5 py-1.5 text-xs font-medium capitalize transition-colors ${
-                tab === t
-                  ? 'bg-white shadow-sm dark:bg-slate-700'
-                  : 'text-slate-500 dark:text-slate-400'
-              }`}
-            >
+            <button key={t} onClick={() => setTab(t)} className={segCls(tab === t) + ' capitalize'}>
               {t}
             </button>
           ))}
         </div>
+        <span className="mx-1 hidden h-4 w-px bg-line sm:block" />
         <div className="flex flex-wrap gap-1.5">
           {areas.map((a) => (
             <button
               key={a.id}
               onClick={() => setAreaFilter(areaFilter === a.id ? null : a.id)}
-              className={`rounded-full px-2.5 py-1 text-xs font-medium transition-all ${
+              className="inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1.5 text-xs font-medium transition-colors"
+              style={
                 areaFilter === a.id
-                  ? AREA_COLORS[a.color].chip + ' ring-2 ring-current'
-                  : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
-              }`}
+                  ? {
+                      borderColor: areaVar(a.color),
+                      color: areaVar(a.color),
+                      background: tint(areaVar(a.color), 10),
+                    }
+                  : { borderColor: 'var(--line)', color: 'var(--ink-2)' }
+              }
             >
-              {a.icon} {a.name}
+              <AreaMark area={a} size={9} />
+              {a.name}
             </button>
           ))}
         </div>
@@ -98,7 +98,7 @@ export function Tasks() {
       {groups.length === 0 ? (
         <Card>
           <EmptyState
-            icon={<IconTasks className="w-10 h-10" />}
+            icon={<IconTasks className="w-9 h-9" />}
             title={
               tab === 'pendientes'
                 ? areaFilter
@@ -109,17 +109,20 @@ export function Tasks() {
             hint={
               tab === 'pendientes'
                 ? 'Crea una tarea con el botón "Nueva" o convierte capturas desde tu Bandeja.'
-                : 'Cuando completes tareas aparecerán aquí. ¡Tu historial de logros!'
+                : 'Cuando completes tareas aparecerán aquí: tu historial de logros.'
             }
           />
         </Card>
       ) : (
         groups.map((g) => (
           <Card key={g.label}>
-            <CardHeader title={g.label} subtitle={`${g.items.length} ${g.items.length === 1 ? 'tarea' : 'tareas'}`} />
-            <div className="divide-y divide-slate-100 pb-2 dark:divide-slate-800">
+            <CardHeader
+              title={g.label}
+              subtitle={`${g.items.length} ${g.items.length === 1 ? 'tarea' : 'tareas'}`}
+            />
+            <div className="divide-y divide-line pb-2">
               {g.items.map((t) => (
-                <TaskRow key={t.id} task={t} onEdit={setEditing} showStar />
+                <TaskRow key={t.id} task={t} onEdit={setEditing} />
               ))}
             </div>
           </Card>

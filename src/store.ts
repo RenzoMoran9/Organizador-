@@ -39,12 +39,32 @@ const focusInicial: FocusState = {
 }
 
 const areasIniciales: Area[] = [
-  { id: 'trabajo', name: 'Trabajo', icon: '💼', color: 'blue' },
-  { id: 'familia', name: 'Familia', icon: '👨‍👩‍👧', color: 'rose' },
-  { id: 'personal', name: 'Personal', icon: '🧠', color: 'violet' },
-  { id: 'salud', name: 'Salud', icon: '💪', color: 'emerald' },
-  { id: 'finanzas', name: 'Finanzas', icon: '💰', color: 'amber' },
+  { id: 'trabajo', name: 'Trabajo', icon: 'square', color: 'cobalt' },
+  { id: 'familia', name: 'Familia', icon: 'circle', color: 'oxide' },
+  { id: 'personal', name: 'Personal', icon: 'diamond', color: 'plum' },
+  { id: 'salud', name: 'Salud', icon: 'triangle', color: 'moss' },
+  { id: 'finanzas', name: 'Finanzas', icon: 'hex', color: 'ochre' },
 ]
+
+/** Migración v1 → v2: colores Tailwind y emojis pasan a la paleta e íconos cartográficos. */
+const COLOR_V1_V2: Record<string, Area['color']> = {
+  teal: 'petrol',
+  blue: 'cobalt',
+  violet: 'plum',
+  rose: 'oxide',
+  emerald: 'moss',
+  amber: 'ochre',
+  sky: 'slate',
+  orange: 'sepia',
+}
+const SHAPE_SET = new Set(['square', 'circle', 'diamond', 'triangle', 'hex', 'ring'])
+const ICON_V1_V2: Record<string, string> = {
+  '💼': 'square',
+  '👨‍👩‍👧': 'circle',
+  '🧠': 'diamond',
+  '💪': 'triangle',
+  '💰': 'hex',
+}
 
 export interface AppState {
   userName: string
@@ -283,6 +303,19 @@ export const useStore = create<AppState>()(
     }),
     {
       name: 'norte-datos',
+      version: 2,
+      migrate: (persisted) => {
+        const s = persisted as Partial<AppState>
+        const colorSet = new Set(['cobalt', 'oxide', 'moss', 'ochre', 'plum', 'petrol', 'sepia', 'slate'])
+        if (s.areas) {
+          s.areas = s.areas.map((a) => ({
+            ...a,
+            color: COLOR_V1_V2[a.color] ?? (colorSet.has(a.color) ? a.color : 'slate'),
+            icon: SHAPE_SET.has(a.icon) ? a.icon : (ICON_V1_V2[a.icon] ?? 'ring'),
+          }))
+        }
+        return s as never
+      },
       partialize: (s) => ({
         userName: s.userName,
         theme: s.theme,

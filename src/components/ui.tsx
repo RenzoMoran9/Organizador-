@@ -22,19 +22,19 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/50 backdrop-blur-sm p-0 sm:p-6"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-panel/60 backdrop-blur-[2px] p-0 sm:p-6"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
     >
       <div
-        className={`w-full ${wide ? 'sm:max-w-2xl' : 'sm:max-w-lg'} max-h-[92dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 shadow-2xl ring-1 ring-slate-900/5 dark:ring-white/10 animate-slide-up`}
+        className={`w-full ${wide ? 'sm:max-w-2xl' : 'sm:max-w-lg'} max-h-[92dvh] overflow-y-auto rounded-t-lg sm:rounded-lg bg-surface border border-line shadow-2xl animate-slide-up`}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-5 py-4 rounded-t-3xl">
-          <h2 className="text-base font-semibold">{title}</h2>
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-line bg-surface/95 backdrop-blur px-5 py-3.5">
+          <h2 className="font-display text-[17px] font-semibold">{title}</h2>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300 transition-colors"
+            className="rounded-sm p-1.5 text-ink3 hover:bg-surface2 hover:text-ink transition-colors"
             aria-label="Cerrar"
           >
             <IconX className="w-5 h-5" />
@@ -54,9 +54,7 @@ export function Card({
   className?: string
 }) {
   return (
-    <section
-      className={`rounded-2xl bg-white dark:bg-slate-900 shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10 ${className}`}
-    >
+    <section className={`rounded-md bg-surface border border-line ${className}`}>
       {children}
     </section>
   )
@@ -74,12 +72,11 @@ export function CardHeader({
   return (
     <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-1">
       <div>
-        <h2 className="text-sm font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase">
+        <h2 className="caption flex items-center gap-2">
+          <span className="inline-block h-px w-4 bg-ink3" />
           {title}
         </h2>
-        {subtitle && (
-          <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{subtitle}</p>
-        )}
+        {subtitle && <p className="mt-1 text-xs text-ink3">{subtitle}</p>}
       </div>
       {action}
     </div>
@@ -97,9 +94,9 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center gap-2 px-6 py-10 text-center">
-      <div className="text-slate-300 dark:text-slate-600">{icon}</div>
-      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{title}</p>
-      {hint && <p className="text-xs text-slate-400 dark:text-slate-500 max-w-xs">{hint}</p>}
+      <div className="text-ink3/60">{icon}</div>
+      <p className="font-display italic text-[15px] text-ink2">{title}</p>
+      {hint && <p className="text-xs text-ink3 max-w-xs leading-relaxed">{hint}</p>}
     </div>
   )
 }
@@ -121,19 +118,17 @@ export function Btn({
 }) {
   const styles = {
     primary:
-      'bg-teal-600 text-white hover:bg-teal-700 shadow-sm disabled:opacity-40 disabled:hover:bg-teal-600',
-    soft: 'bg-teal-50 text-teal-700 hover:bg-teal-100 dark:bg-teal-500/10 dark:text-teal-300 dark:hover:bg-teal-500/20',
-    ghost:
-      'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
-    danger:
-      'text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10',
+      'bg-accent text-onaccent hover:bg-accent2 disabled:opacity-40 disabled:hover:bg-accent',
+    soft: 'border border-line text-accent hover:border-accent/50 hover:bg-accent/5',
+    ghost: 'text-ink2 hover:bg-surface2 hover:text-ink',
+    danger: 'text-oxide hover:bg-oxide/10',
   }[variant]
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${styles} ${className}`}
+      className={`inline-flex items-center justify-center gap-1.5 rounded-sm px-4 py-2 text-sm font-medium transition-colors active:translate-y-px ${styles} ${className}`}
     >
       {children}
     </button>
@@ -149,13 +144,19 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">
-        {label}
-      </span>
+      <span className="caption mb-1.5 block !text-[10px]">{label}</span>
       {children}
     </label>
   )
 }
 
 export const inputCls =
-  'w-full rounded-xl border-0 bg-slate-100 dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow'
+  'w-full rounded-sm border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder:text-ink3 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors'
+
+/** Botón de opción tipo segmento (formas, colores, presets…) */
+export const segCls = (active: boolean) =>
+  `rounded-sm px-3 py-2 text-xs font-medium transition-colors border ${
+    active
+      ? 'border-accent text-accent bg-accent/8'
+      : 'border-line text-ink2 hover:border-ink3 hover:text-ink'
+  }`

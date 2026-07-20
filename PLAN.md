@@ -88,11 +88,13 @@ La pantalla que ves al abrir la app. Muestra solo lo que importa hoy:
 3. **Máximo 2 toques** para cualquier acción frecuente (capturar, completar, posponer).
 4. **Calma visual** — la app debe relajar, no estresar. Espacios en blanco generosos, sin rojos alarmantes por todos lados.
 
-### Identidad visual
-- **Paleta**: fondo claro/oscuro (según preferencia del sistema), un color primario sobrio (azul profundo o verde bosque), y colores suaves por área de vida.
-- **Tipografía**: una sans-serif limpia y legible (Inter).
-- **Componentes**: tarjetas con bordes redondeados, sombras sutiles, animaciones discretas al completar tareas (una micro-celebración ✓).
-- **Modo oscuro** completo desde el día uno.
+### Identidad visual: "bitácora de navegación"
+- **Concepto**: la app como un cuaderno de bitácora — tinta sobre papel, precisión de instrumento, leyenda de mapa.
+- **Paleta**: papel cálido y tinta azulada como neutros elegidos (no grises por defecto), **azul cobalto** como único acento, y una paleta cartográfica sobria por área de vida (cobalto, óxido, musgo, ocre, ciruela, petróleo, sepia, pizarra).
+- **Tipografía en tres voces**: **Fraunces** (serif editorial) para titulares, **Archivo** para la interfaz, **IBM Plex Mono** para horas, fechas, contadores y etiquetas — como un cronómetro.
+- **Símbolos cartográficos**: cada área de vida se identifica con una forma de leyenda de mapa (■ ● ◆ ▲ ⬢ ◎) en su color, no con emojis.
+- **Geometría precisa**: bordes finos de 1px, radios pequeños, sin sombras infladas; panel lateral de tinta oscura en ambos temas.
+- **Modo claro y oscuro** con el mismo cuidado, vía tokens de color.
 - **Responsive**: perfecta en celular (uso principal) y en pantalla grande.
 
 ---
