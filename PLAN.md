@@ -99,11 +99,13 @@ La pantalla que ves al abrir la app. Muestra solo lo que importa hoy:
 
 ## 5. Arquitectura técnica propuesta
 
+**Será una app web**: se abre desde cualquier navegador (celular, laptop, tablet) con solo entrar a una URL, sin instalar nada de tiendas de aplicaciones. Y como además será PWA, quien quiera puede "agregarla a la pantalla de inicio" y usarla como si fuera una app nativa, incluso sin internet.
+
 | Capa | Tecnología | Por qué |
 |---|---|---|
 | Frontend | **React + Vite + TypeScript** | Rápido, moderno, mantenible |
 | Estilos | **Tailwind CSS** | Diseño profesional y consistente sin esfuerzo |
-| App instalable | **PWA** (Progressive Web App) | Se instala en el celular como app nativa, funciona sin internet |
+| Tipo de app | **App web + PWA** (Progressive Web App) | Accesible desde cualquier navegador con una URL; opcionalmente instalable en el celular y funciona sin internet |
 | Datos (fase 1) | **IndexedDB local** | Tus datos en tu dispositivo, privacidad total, cero costo |
 | Datos (fase 2) | **Supabase** (o similar) | Sincronización entre dispositivos y respaldo en la nube |
 | Notificaciones | Web Push / recordatorios locales | Avisos de eventos, hábitos y prioridades |
